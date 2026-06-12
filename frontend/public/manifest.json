@@ -1,0 +1,30 @@
+{
+  "name": "Antestreias",
+  "short_name": "Antestreias",
+  "description": "Não te limites a ver filmes. Vive-os. Antestreias, passatempos e o melhor do cinema.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#191818",
+  "theme_color": "#E50915",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/pwa-icon.png",
+      "type": "image/png",
+      "sizes": "144x144",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-icon.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ]
+}
