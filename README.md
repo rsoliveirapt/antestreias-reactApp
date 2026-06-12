@@ -1,4 +1,4 @@
-# Antestreias — Gestor e Portal de Cinema
+# Antestreias.com
 
 ![Antestreias Banner](banner.png)
 
