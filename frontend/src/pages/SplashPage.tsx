@@ -46,10 +46,10 @@ export default function SplashPage({ mode }: Props) {
   const isDark = theme === 'dark';
 
   // Determine logo URL depending on the dark/light background theme
-  const logoUrl = appearance 
-    ? (isDark 
-        ? (appearance['appearance.logo_light'] || appearance['appearance.logo_dark']) 
-        : (appearance['appearance.logo_dark'] || appearance['appearance.logo_light']))
+  const logoUrl = appearance
+    ? (isDark
+      ? (appearance['appearance.logo_light'] || appearance['appearance.logo_dark'])
+      : (appearance['appearance.logo_dark'] || appearance['appearance.logo_light']))
     : null;
 
   const siteName = appearance?.['general.site_name'] || 'Antestreias';
@@ -135,14 +135,7 @@ export default function SplashPage({ mode }: Props) {
         width: '100%',
         maxWidth: 500,
         padding: '50px 40px',
-        borderRadius: 24,
         textAlign: 'center',
-        background: currentColors.cardBg,
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        border: currentColors.cardBorder,
-        boxShadow: isDark ? '0 30px 60px rgba(0, 0, 0, 0.45)' : '0 20px 40px rgba(0, 0, 0, 0.08)',
-        transition: 'background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease',
         zIndex: 5
       }}>
         {/* Brand Logo or Text */}
@@ -187,38 +180,10 @@ export default function SplashPage({ mode }: Props) {
           maxWidth: '380px',
           margin: '0 auto 32px'
         }}>
-          {isMaintenance 
-            ? 'Estamos a efetuar melhorias técnicas no nosso portal para lhe proporcionar uma experiência cinematográfica incrível. Voltamos a estar online muito em breve!' 
-            : 'O novo portal Antestreias.com está a ser preparado para o lançamento. Prepare as pipocas, novidades espetaculares estão a caminho!'}
+          {isMaintenance
+            ? 'Estamos a efetuar melhorias técnicas no Antestreias para proporcionar uma experiência cinematográfica incrível. Voltamos a estar online muito em breve!'
+            : 'O Antestreias está a ser preparado para o lançamento. Prepara as pipocas, novidades espetaculares estão a caminho!'}
         </p>
-
-        {/* Action Button */}
-        <button
-          onClick={() => window.location.reload()}
-          style={{
-            background: currentColors.accent,
-            color: '#ffffff',
-            border: 'none',
-            padding: '12px 28px',
-            borderRadius: 12,
-            fontSize: 14,
-            fontWeight: 700,
-            cursor: 'pointer',
-            boxShadow: `0 4px 15px ${currentColors.accentGlow}`,
-            transition: 'all 0.2s',
-            fontFamily: "'Outfit', sans-serif"
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.opacity = '0.9';
-            e.currentTarget.style.transform = 'translateY(-1px)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.opacity = '1';
-            e.currentTarget.style.transform = 'none';
-          }}
-        >
-          Tentar Novamente
-        </button>
 
         {/* Subtle Administration Access Link */}
         <div style={{ marginTop: 40 }}>
@@ -245,7 +210,7 @@ export default function SplashPage({ mode }: Props) {
               if (icon) icon.style.transform = 'none';
             }}
           >
-            Administração <ArrowRight size={14} style={{ transition: 'transform 0.2s' }} />
+            Login <ArrowRight size={14} style={{ transition: 'transform 0.2s' }} />
           </a>
         </div>
       </div>
