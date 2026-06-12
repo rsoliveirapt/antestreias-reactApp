@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Wrench, Rocket, Sun, Moon, ArrowRight } from 'lucide-react';
+import { Film, Sun, Moon, ArrowRight } from 'lucide-react';
+import { API_BASE } from '../config';
 
 interface Props {
   mode: 'maintenance' | 'coming_soon';
@@ -13,45 +14,75 @@ export default function SplashPage({ mode }: Props) {
     return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   });
 
+  const [appearance, setAppearance] = useState<any>(() => {
+    try {
+      const saved = localStorage.getItem('navbar_appearance');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   useEffect(() => {
     localStorage.setItem('splash_theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    // Dynamic fetch to get live logo URLs (allowed under maintenance modes)
+    fetch(`${API_BASE}/admin_appearance.php`)
+      .then(res => res.json())
+      .then(data => {
+        setAppearance(data);
+        localStorage.setItem('navbar_appearance', JSON.stringify(data));
+      })
+      .catch(err => console.error("Error fetching appearance on splash page:", err));
+  }, []);
 
   const handleToggleTheme = () => {
     setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
   };
 
   const isMaintenance = mode === 'maintenance';
+  const isDark = theme === 'dark';
 
-  // Styles for Dark and Light themes
+  // Determine logo URL depending on the dark/light background theme
+  const logoUrl = appearance 
+    ? (isDark 
+        ? (appearance['appearance.logo_light'] || appearance['appearance.logo_dark']) 
+        : (appearance['appearance.logo_dark'] || appearance['appearance.logo_light']))
+    : null;
+
+  const siteName = appearance?.['general.site_name'] || 'Antestreias';
+
+  // Styles matching the premium application aesthetic
   const colors = {
     dark: {
-      background: 'radial-gradient(circle at center, #1c1c1c 0%, #080808 100%)',
+      background: 'radial-gradient(circle at center, #191818 0%, #0c0c0c 100%)',
       textColor: '#ffffff',
-      subText: '#aaaaaa',
-      cardBg: 'rgba(255, 255, 255, 0.02)',
-      cardBorder: '1px solid rgba(255, 255, 255, 0.07)',
+      subText: '#b3b3b3',
+      cardBg: 'rgba(34, 34, 34, 0.45)',
+      cardBorder: '1px solid #2e2e2e',
       btnBg: 'rgba(255, 255, 255, 0.04)',
       btnText: '#ffffff',
       btnBorder: '1px solid rgba(255, 255, 255, 0.08)',
-      accent: '#e50914',
-      accentGlow: 'rgba(229, 9, 20, 0.25)',
-      adminLink: 'rgba(255, 255, 255, 0.35)',
-      adminLinkHover: '#e50914',
+      accent: '#E50915',
+      accentGlow: 'rgba(229, 9, 21, 0.4)',
+      adminLink: 'rgba(255, 255, 255, 0.45)',
+      adminLinkHover: '#E50915',
     },
     light: {
-      background: 'radial-gradient(circle at center, #f5f5f7 0%, #e5e5ea 100%)',
-      textColor: '#1c1c1e',
-      subText: '#5c5c5e',
-      cardBg: 'rgba(255, 255, 255, 0.7)',
-      cardBorder: '1px solid rgba(0, 0, 0, 0.08)',
+      background: 'radial-gradient(circle at center, #f8f8f8 0%, #e5e5e5 100%)',
+      textColor: '#191818',
+      subText: '#555555',
+      cardBg: 'rgba(255, 255, 255, 0.75)',
+      cardBorder: '1px solid rgba(0, 0, 0, 0.1)',
       btnBg: 'rgba(0, 0, 0, 0.03)',
-      btnText: '#1c1c1e',
+      btnText: '#191818',
       btnBorder: '1px solid rgba(0, 0, 0, 0.08)',
-      accent: '#e50914',
-      accentGlow: 'rgba(229, 9, 20, 0.15)',
-      adminLink: 'rgba(0, 0, 0, 0.45)',
-      adminLinkHover: '#e50914',
+      accent: '#E50915',
+      accentGlow: 'rgba(229, 9, 21, 0.2)',
+      adminLink: 'rgba(0, 0, 0, 0.55)',
+      adminLinkHover: '#E50915',
     }
   };
 
@@ -65,7 +96,7 @@ export default function SplashPage({ mode }: Props) {
       justifyContent: 'center',
       background: currentColors.background,
       color: currentColors.textColor,
-      fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      fontFamily: "'Outfit', system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
       padding: 20,
       transition: 'background 0.3s ease, color 0.3s ease',
       position: 'relative',
@@ -96,59 +127,65 @@ export default function SplashPage({ mode }: Props) {
         onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.08)'}
         onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
       >
-        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+        {isDark ? <Sun size={20} /> : <Moon size={20} />}
       </button>
 
       {/* Main Announcement Card */}
       <div style={{
         width: '100%',
-        maxWidth: 550,
+        maxWidth: 500,
         padding: '50px 40px',
-        borderRadius: 28,
+        borderRadius: 24,
         textAlign: 'center',
         background: currentColors.cardBg,
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
         border: currentColors.cardBorder,
-        boxShadow: theme === 'dark' ? '0 30px 60px rgba(0, 0, 0, 0.5)' : '0 20px 45px rgba(0, 0, 0, 0.08)',
+        boxShadow: isDark ? '0 30px 60px rgba(0, 0, 0, 0.45)' : '0 20px 40px rgba(0, 0, 0, 0.08)',
         transition: 'background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease',
         zIndex: 5
       }}>
-        {/* Glowing Icon Container */}
-        <div style={{
-          width: 80,
-          height: 80,
-          background: isMaintenance ? 'rgba(229, 9, 20, 0.12)' : 'rgba(245, 158, 11, 0.12)',
-          borderRadius: 22,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: '0 auto 28px',
-          color: isMaintenance ? '#e50914' : '#f59e0b',
-          boxShadow: `0 10px 30px ${isMaintenance ? currentColors.accentGlow : 'rgba(245, 158, 11, 0.25)'}`,
-          animation: 'pulseGlow 2.5s infinite ease-in-out'
-        }}>
-          {isMaintenance ? <Wrench size={38} /> : <Rocket size={38} />}
+        {/* Brand Logo or Text */}
+        <div style={{ marginBottom: 36, display: 'flex', justifyContent: 'center' }}>
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt={siteName}
+              style={{
+                maxHeight: 48,
+                maxWidth: '100%',
+                objectFit: 'contain',
+                display: 'block'
+              }}
+            />
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <Film size={32} color={currentColors.accent} style={{ filter: `drop-shadow(0 0 8px ${currentColors.accentGlow})` }} />
+              <span style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.5px' }}>
+                {siteName}
+              </span>
+            </div>
+          )}
         </div>
 
-        {/* Title */}
+        {/* Status Mode Title */}
         <h1 style={{
-          fontSize: 32,
-          fontWeight: 850,
+          fontSize: 28,
+          fontWeight: 800,
           marginBottom: 16,
           letterSpacing: '-0.5px'
         }}>
           {isMaintenance ? 'Em Manutenção' : 'Brevemente'}
         </h1>
 
-        {/* Subtitle */}
+        {/* Message */}
         <p style={{
           color: currentColors.subText,
-          fontSize: 16,
-          lineHeight: 1.7,
-          marginBottom: 35,
-          maxWidth: '440px',
-          margin: '0 auto 35px'
+          fontSize: 15,
+          lineHeight: 1.6,
+          marginBottom: 32,
+          maxWidth: '380px',
+          margin: '0 auto 32px'
         }}>
           {isMaintenance 
             ? 'Estamos a efetuar melhorias técnicas no nosso portal para lhe proporcionar uma experiência cinematográfica incrível. Voltamos a estar online muito em breve!' 
@@ -159,41 +196,48 @@ export default function SplashPage({ mode }: Props) {
         <button
           onClick={() => window.location.reload()}
           style={{
-            background: isMaintenance ? '#e50914' : '#f59e0b',
+            background: currentColors.accent,
             color: '#ffffff',
             border: 'none',
-            padding: '14px 28px',
-            borderRadius: 14,
-            fontSize: 15,
+            padding: '12px 28px',
+            borderRadius: 12,
+            fontSize: 14,
             fontWeight: 700,
             cursor: 'pointer',
-            boxShadow: `0 6px 20px ${isMaintenance ? 'rgba(229, 9, 20, 0.35)' : 'rgba(245, 158, 11, 0.35)'}`,
-            transition: 'opacity 0.2s',
+            boxShadow: `0 4px 15px ${currentColors.accentGlow}`,
+            transition: 'all 0.2s',
+            fontFamily: "'Outfit', sans-serif"
           }}
-          onMouseOver={(e) => e.currentTarget.style.opacity = '0.9'}
-          onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+          onMouseOver={(e) => {
+            e.currentTarget.style.opacity = '0.9';
+            e.currentTarget.style.transform = 'translateY(-1px)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.opacity = '1';
+            e.currentTarget.style.transform = 'none';
+          }}
         >
           Tentar Novamente
         </button>
 
         {/* Subtle Administration Access Link */}
-        <div style={{ marginTop: 45 }}>
+        <div style={{ marginTop: 40 }}>
           <a
             href="/login"
             style={{
               fontSize: 13,
               color: currentColors.adminLink,
               textDecoration: 'none',
-              fontWeight: 500,
+              fontWeight: 600,
               display: 'inline-flex',
               alignItems: 'center',
-              gap: 6,
+              gap: 4,
               transition: 'color 0.2s'
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.color = currentColors.adminLinkHover;
               const icon = e.currentTarget.querySelector('svg');
-              if (icon) icon.style.transform = 'translateX(4px)';
+              if (icon) icon.style.transform = 'translateX(2px)';
             }}
             onMouseOut={(e) => {
               e.currentTarget.style.color = currentColors.adminLink;
@@ -205,14 +249,6 @@ export default function SplashPage({ mode }: Props) {
           </a>
         </div>
       </div>
-
-      {/* Styled Keyframe Animation (Inject dynamically) */}
-      <style>{`
-        @keyframes pulseGlow {
-          0%, 100% { transform: scale(1); opacity: 0.9; }
-          50% { transform: scale(1.05); opacity: 1; }
-        }
-      `}</style>
     </div>
   );
 }
