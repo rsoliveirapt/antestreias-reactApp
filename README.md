@@ -13,11 +13,20 @@ O **Antestreias** é uma plataforma e portal de cinema concebido para a publica�
 * **Sliders Dinâmicos:** Carrosséis interativos que destacam os últimos lançamentos, trailers e notícias em destaque na página inicial.
 * **Fichas de Filmes Completas:** Detalhes de elenco, país de produção, trailers oficiais, géneros e críticas associadas.
 
-### 🎁 Passatempos & Antestreias
-![Participação em Passatempos](screenshot_contests.png)
-
-* **Formulários de Participação:** Utilizadores podem habilitar-se a ganhar convites duplos selecionando o local de exibição (ex: cinemas de Lisboa ou Porto).
-* **Gestão de Vencedores:** Painel administrativo completo para visualizar participações, exportar listas de participantes e sortear/definir vencedores de forma organizada.
+<table>
+  <tr>
+    <td width="60%" valign="top">
+      <h3>🎁 Passatempos & Antestreias</h3>
+      <ul>
+        <li><b>Formulários de Participação:</b> Utilizadores podem habilitar-se a ganhar convites duplos selecionando o local de exibição (ex: cinemas de Lisboa ou Porto).</li>
+        <li><b>Gestão de Vencedores:</b> Painel administrativo completo para visualizar participações, exportar listas de participantes e sortear/definir vencedores de forma organizada.</li>
+      </ul>
+    </td>
+    <td width="40%" align="center" valign="top">
+      <img src="screenshot_contests.png" alt="Participação em Passatempos" width="280">
+    </td>
+  </tr>
+</table>
 
 ### 💬 Comunidade
 * **Perfis de Utilizador:** Cada membro tem um perfil personalizado onde pode visualizar o seu histórico, seguir outros utilizadores e gerir as suas avaliações.
