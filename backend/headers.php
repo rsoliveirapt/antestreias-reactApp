@@ -300,3 +300,58 @@ if (strpos($script_name, 'admin_') === 0 || strpos($script_name, 'tmdb_') === 0 
     }
 }
 
+// --- Maintenance & Coming Soon Mode Restriction ---
+try {
+    require_once 'db.php';
+    $stmt_mode = $pdo->prepare("SELECT value FROM settings WHERE name = ?");
+    $stmt_mode->execute(['access_mode']);
+    $access_mode = $stmt_mode->fetchColumn() ?: 'normal';
+
+    if ($access_mode === 'maintenance' || $access_mode === 'coming_soon') {
+        $is_admin = false;
+        
+        if (session_status() === PHP_SESSION_NONE) {
+            try {
+                @session_start();
+            } catch (Throwable $e_sess) {}
+        }
+        
+        if (isset($_SESSION['user_id'])) {
+            require_once 'functions.php';
+            $stmt_user = $pdo->prepare("SELECT role, permissions FROM users WHERE id = ? AND suspended = 0");
+            $stmt_user->execute([$_SESSION['user_id']]);
+            $user_check = $stmt_user->fetch(PDO::FETCH_ASSOC);
+            if ($user_check) {
+                $perms = get_user_permissions($pdo, $user_check['role'], $user_check['permissions']);
+                if (in_array('access_admin', $perms)) {
+                    $is_admin = true;
+                }
+            }
+        }
+
+        $script_name = basename($_SERVER['SCRIPT_FILENAME']);
+        $allowed_scripts = [
+            'login.php',
+            'logout.php',
+            'check_auth.php',
+            'admin_settings.php',
+            'admin_appearance.php',
+            'admin_themes.php',
+            'report_error.php'
+        ];
+
+        if (!$is_admin && !in_array($script_name, $allowed_scripts)) {
+            http_response_code(503);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'error' => 'O site encontra-se em manutenção temporária. Por favor, tente mais tarde.',
+                'access_mode' => $access_mode
+            ]);
+            exit;
+        }
+    }
+} catch (Throwable $e_mode) {
+    // Fail-open to avoid breaking API
+}
+
+

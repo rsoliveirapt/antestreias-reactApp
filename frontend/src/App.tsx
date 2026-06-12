@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { API_BASE } from './config';
@@ -78,6 +78,8 @@ import CookieBanner from './components/CookieBanner';
 import PwaInstallBanner from './components/PwaInstallBanner';
 import ScrollToTop from './components/ScrollToTop';
 import './index.css';
+import SplashPage from './pages/SplashPage';
+import { useAuth } from './context/AuthContext';
 
 
 import Footer from './components/Footer';
@@ -137,6 +139,21 @@ function MainLayout() {
 }
 
 function App() {
+  return (
+    <AuthProvider>
+      <LanguageProvider>
+        <ThemeProvider>
+          <AppContent />
+        </ThemeProvider>
+      </LanguageProvider>
+    </AuthProvider>
+  );
+}
+
+function AppContent() {
+  const { isAdmin, loading } = useAuth();
+  const [accessMode, setAccessMode] = useState<string>('normal');
+
   useEffect(() => {
     fetch(`${API_BASE}/admin_appearance.php`, {
       credentials: 'include'
@@ -151,106 +168,147 @@ function App() {
           const favicon = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
           if (favicon) favicon.href = data['appearance.favicon'];
         }
+        if (data['access_mode']) {
+          setAccessMode(data['access_mode']);
+        }
+      })
+      .catch(err => {
+        // Fallback for network issues / 503 during maintenance
+        const cachedMode = localStorage.getItem('access_mode');
+        if (cachedMode) setAccessMode(cachedMode);
       });
   }, []);
 
+  // Save access_mode in localStorage as local fallback during 503 offline checks
+  useEffect(() => {
+    if (accessMode) {
+      localStorage.setItem('access_mode', accessMode);
+    }
+  }, [accessMode]);
+
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: '#0a0a0a',
+        color: '#fff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'system-ui, sans-serif'
+      }}>
+        A carregar...
+      </div>
+    );
+  }
+
   return (
-    <AuthProvider>
-      <LanguageProvider>
-        <ThemeProvider>
-          <Toast />
-          <BrowserRouter>
-            <CookieBanner />
-            <PwaInstallBanner />
-          <ScrollToTop />
-          <Routes>
-            <Route element={<MainLayout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/movies" element={<Movies />} />
-              <Route path="/series" element={<Series />} />
-              <Route path="/reviews" element={<Reviews />} />
-              <Route path="/contests" element={<Contests />} />
-              <Route path="/review/:slug" element={<ReviewDetail />} />
-              <Route path="/movie/:id" element={<Movie />} />
-              <Route path="/movie/:id/cast" element={<MovieCast />} />
-              <Route path="/category/:slug" element={<Category />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/verify-email" element={<VerifyEmail />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/series/:id" element={<Movie />} />
-              <Route path="/titles/:id" element={<Movie />} />
-              <Route path="/news" element={<News />} />
-              <Route path="/news/:slug" element={<NewsDetail />} />
-              <Route path="/perfil" element={<Profile />} />
-              <Route path="/perfil/:username" element={<Profile />} />
-              <Route path="/definicoes" element={<AccountSettings />} />
-              <Route path="/celebrity/:slug" element={<Celebrity />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/:slug" element={<CustomPage />} />
-            </Route>
+    <>
+      <Toast />
+      <BrowserRouter>
+        <CookieBanner />
+        <PwaInstallBanner />
+        <ScrollToTop />
+        <AppRoutes accessMode={accessMode} isAdmin={isAdmin} />
+      </BrowserRouter>
+    </>
+  );
+}
 
-            <Route element={<ProtectedRoute requiredPermission="access_admin" />}>
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="movies" element={<AdminMedia />} />
-                <Route path="movies/:id" element={<AdminMediaEdit />} />
-                <Route path="series" element={<AdminMedia />} />
-                <Route path="series/:id" element={<AdminMediaEdit />} />
-                <Route path="celebrities" element={<AdminCelebrities />} />
-                <Route path="celebrities/:id" element={<AdminCelebrityEdit />} />
-                <Route path="translations" element={<AdminTranslations />} />
-                <Route path="translations/:id" element={<AdminTranslationEdit />} />
-                <Route path="categories" element={<AdminCategories />} />
-                <Route path="reviews" element={<AdminReviews />} />
-                <Route path="news" element={<AdminNews />} />
-                <Route path="news/sources" element={<AdminNewsSources />} />
-                <Route path="videos" element={<AdminVideos />} />
-                <Route path="files" element={<AdminFiles />} />
-                <Route path="ads" element={<AdminAds />} />
-                <Route path="alerts" element={<AdminGoogleAlerts />} />
-                <Route path="notifications" element={<AdminPushNotifications />} />
-                <Route path="pages" element={<AdminPages />} />
-                <Route path="pages/new" element={<AdminPageEditor />} />
-                <Route path="pages/:id" element={<AdminPageEditor />} />
-                <Route path="contests" element={<AdminContests />} />
+function AppRoutes({ accessMode, isAdmin }: { accessMode: string; isAdmin: boolean }) {
+  const location = useLocation();
+  const isRestricted = accessMode === 'maintenance' || accessMode === 'coming_soon';
+  const path = location.pathname;
 
-                <Route path="settings" element={<SettingsLayout />}>
-                  <Route index element={<SettingsSearch />} />
-                  <Route path="search" element={<SettingsSearch />} />
-                  <Route path="content" element={<SettingsContent />} />
-                  <Route path="videos" element={<SettingsVideos />} />
-                  <Route path="general" element={<SettingsGeneral />} />
-                  <Route path="registration" element={<SettingsRegistration />} />
-                  <Route path="localization" element={<SettingsLocalization />} />
-                  <Route path="auth" element={<SettingsAuth />} />
-                  <Route path="uploads" element={<SettingsUploads />} />
-                  <Route path="mail" element={<SettingsMail />} />
-                  <Route path="cache" element={<SettingsCache />} />
-                  <Route path="metrics" element={<SettingsMetrics />} />
-                  <Route path="logging" element={<SettingsLogging />} />
-                  <Route path="queue" element={<SettingsQueue />} />
-                  <Route path="recaptcha" element={<SettingsRecaptcha />} />
-                  <Route path="gdpr" element={<SettingsGdpr />} />
-                  <Route path="seo" element={<SettingsSEO />} />
-                  <Route path="themes" element={<SettingsThemes />} />
-                  <Route path="appearance" element={<SettingsAppearance />} />
-                  <Route path="appearance/slider" element={<SettingsAppearanceSlider />} />
-                  <Route path="appearance/mail" element={<SettingsAppearanceMail />} />
-                  <Route path="appearance/mail/templates" element={<SettingsMailTemplates />} />
-                   <Route path="roles" element={<SettingsRoles />} />
-                  <Route path="footer" element={<SettingsFooter />} />
-                  <Route path="menus" element={<AdminMenus />} />
-                </Route>
-              </Route>
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-      </LanguageProvider>
-    </AuthProvider>
+  if (isRestricted && !isAdmin && path !== '/login' && !path.startsWith('/admin')) {
+    return <SplashPage mode={accessMode as 'maintenance' | 'coming_soon'} />;
+  }
+
+  return (
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/movies" element={<Movies />} />
+        <Route path="/series" element={<Series />} />
+        <Route path="/reviews" element={<Reviews />} />
+        <Route path="/contests" element={<Contests />} />
+        <Route path="/review/:slug" element={<ReviewDetail />} />
+        <Route path="/movie/:id" element={<Movie />} />
+        <Route path="/movie/:id/cast" element={<MovieCast />} />
+        <Route path="/category/:slug" element={<Category />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/series/:id" element={<Movie />} />
+        <Route path="/titles/:id" element={<Movie />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/news/:slug" element={<NewsDetail />} />
+        <Route path="/perfil" element={<Profile />} />
+        <Route path="/perfil/:username" element={<Profile />} />
+        <Route path="/definicoes" element={<AccountSettings />} />
+        <Route path="/celebrity/:slug" element={<Celebrity />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/:slug" element={<CustomPage />} />
+      </Route>
+
+      <Route element={<ProtectedRoute requiredPermission="access_admin" />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="movies" element={<AdminMedia />} />
+          <Route path="movies/:id" element={<AdminMediaEdit />} />
+          <Route path="series" element={<AdminMedia />} />
+          <Route path="series/:id" element={<AdminMediaEdit />} />
+          <Route path="celebrities" element={<AdminCelebrities />} />
+          <Route path="celebrities/:id" element={<AdminCelebrityEdit />} />
+          <Route path="translations" element={<AdminTranslations />} />
+          <Route path="translations/:id" element={<AdminTranslationEdit />} />
+          <Route path="categories" element={<AdminCategories />} />
+          <Route path="reviews" element={<AdminReviews />} />
+          <Route path="news" element={<AdminNews />} />
+          <Route path="news/sources" element={<AdminNewsSources />} />
+          <Route path="videos" element={<AdminVideos />} />
+          <Route path="files" element={<AdminFiles />} />
+          <Route path="ads" element={<AdminAds />} />
+          <Route path="alerts" element={<AdminGoogleAlerts />} />
+          <Route path="notifications" element={<AdminPushNotifications />} />
+          <Route path="pages" element={<AdminPages />} />
+          <Route path="pages/new" element={<AdminPageEditor />} />
+          <Route path="pages/:id" element={<AdminPageEditor />} />
+          <Route path="contests" element={<AdminContests />} />
+
+          <Route path="settings" element={<SettingsLayout />}>
+            <Route index element={<SettingsSearch />} />
+            <Route path="search" element={<SettingsSearch />} />
+            <Route path="content" element={<SettingsContent />} />
+            <Route path="videos" element={<SettingsVideos />} />
+            <Route path="general" element={<SettingsGeneral />} />
+            <Route path="registration" element={<SettingsRegistration />} />
+            <Route path="localization" element={<SettingsLocalization />} />
+            <Route path="auth" element={<SettingsAuth />} />
+            <Route path="uploads" element={<SettingsUploads />} />
+            <Route path="mail" element={<SettingsMail />} />
+            <Route path="cache" element={<SettingsCache />} />
+            <Route path="metrics" element={<SettingsMetrics />} />
+            <Route path="logging" element={<SettingsLogging />} />
+            <Route path="queue" element={<SettingsQueue />} />
+            <Route path="recaptcha" element={<SettingsRecaptcha />} />
+            <Route path="gdpr" element={<SettingsGdpr />} />
+            <Route path="seo" element={<SettingsSEO />} />
+            <Route path="themes" element={<SettingsThemes />} />
+            <Route path="appearance" element={<SettingsAppearance />} />
+            <Route path="appearance/slider" element={<SettingsAppearanceSlider />} />
+            <Route path="appearance/mail" element={<SettingsAppearanceMail />} />
+            <Route path="appearance/mail/templates" element={<SettingsMailTemplates />} />
+             <Route path="roles" element={<SettingsRoles />} />
+            <Route path="footer" element={<SettingsFooter />} />
+            <Route path="menus" element={<AdminMenus />} />
+          </Route>
+        </Route>
+      </Route>
+    </Routes>
   );
 }
 

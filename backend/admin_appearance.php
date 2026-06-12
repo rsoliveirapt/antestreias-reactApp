@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         'slider.manual_ids' => get_setting($pdo, 'slider.manual_ids', ''),
         'auth.registration_enabled' => get_setting($pdo, 'auth.registration_enabled', '1'),
         'mail.contest_participation_template' => get_setting($pdo, 'mail.contest_participation_template', "<p>Olá {{name}},</p><p>A tua participação no passatempo do filme <strong>{{movie}}</strong> ({{contest_name}}) foi registada com sucesso!</p><p><strong>Detalhes da Participação:</strong><br>Local: {{location}}<br>Resposta: {{answer}}</p><p>Boa sorte!<br>Equipa Antestreias</p>"),
+        'access_mode' => get_setting($pdo, 'access_mode', 'normal'),
     ];
     echo json_encode($settings);
 }

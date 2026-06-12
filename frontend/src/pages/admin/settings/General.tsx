@@ -12,6 +12,7 @@ export default function SettingsGeneral() {
   const [homepageType, setHomepageType] = useState('landingPage');
   const [defaultTheme, setDefaultTheme] = useState('dark');
   const [allowThemeSwitch, setAllowThemeSwitch] = useState(false);
+  const [accessMode, setAccessMode] = useState('normal');
 
   useEffect(() => {
     apiFetch(`${API_BASE}/admin_settings.php`)
@@ -21,6 +22,7 @@ export default function SettingsGeneral() {
         if (data['homepage.type']) setHomepageType(data['homepage.type']);
         if (data['themes.default']) setDefaultTheme(data['themes.default']);
         if (data['themes.user_change']) setAllowThemeSwitch(data['themes.user_change'] === 'true');
+        if (data['access_mode']) setAccessMode(data['access_mode']);
         setLoading(false);
       });
   }, []);
@@ -31,6 +33,7 @@ export default function SettingsGeneral() {
       'homepage.type': homepageType,
       'themes.default': defaultTheme,
       'themes.user_change': allowThemeSwitch,
+      'access_mode': accessMode,
     };
 
     try {
@@ -97,6 +100,18 @@ export default function SettingsGeneral() {
         </select>
         <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 8 }}>
           {t('admin_general_homepage_hint', 'Que página deve ser utilizada como página inicial do site.')}
+        </p>
+      </div>
+
+      <div style={{ marginBottom: 30, borderTop: '1px solid var(--glass-border)', paddingTop: 30 }}>
+        <label style={{ display: 'block', marginBottom: 12, fontWeight: 600 }}>{t('admin_general_access_mode', 'Estado do Portal')}</label>
+        <select value={accessMode} onChange={e => setAccessMode(e.target.value)} className="form-input">
+          <option value="normal">{t('admin_general_access_normal', 'Normal (Aberto ao público)')}</option>
+          <option value="maintenance">{t('admin_general_access_maintenance', 'Modo de Manutenção')}</option>
+          <option value="coming_soon">{t('admin_general_access_coming_soon', 'Modo Brevemente')}</option>
+        </select>
+        <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 8 }}>
+          {t('admin_general_access_mode_hint', 'Selecione se o portal deve estar aberto, em manutenção para atualizações ou no modo de lançamento.')}
         </p>
       </div>
 
