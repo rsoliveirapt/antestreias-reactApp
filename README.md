@@ -1,6 +1,6 @@
 # Antestreias — Gestor e Portal de Cinema
 
-![Antestreias Banner](banner.png)
+![Antestreias Banner](banner_preview.png)
 
 O **Antestreias** é uma plataforma e portal de cinema premium concebida para a publicação de antestreias, passatempos, notícias do mundo cinematográfico, críticas de utilizadores e trailers de vídeo. Conta com uma arquitetura moderna dividida, segurança avançada, otimização de base de dados e um sistema robusto de logs e alertas automáticos de erros.
 
