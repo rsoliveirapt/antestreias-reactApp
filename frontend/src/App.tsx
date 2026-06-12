@@ -226,6 +226,12 @@ function AppRoutes({ accessMode, isAdmin }: { accessMode: string; isAdmin: boole
 
   return (
     <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/movies" element={<Movies />} />
@@ -236,11 +242,6 @@ function AppRoutes({ accessMode, isAdmin }: { accessMode: string; isAdmin: boole
         <Route path="/movie/:id" element={<Movie />} />
         <Route path="/movie/:id/cast" element={<MovieCast />} />
         <Route path="/category/:slug" element={<Category />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/series/:id" element={<Movie />} />
         <Route path="/titles/:id" element={<Movie />} />
         <Route path="/news" element={<News />} />
