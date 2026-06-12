@@ -14,6 +14,8 @@ O **Antestreias** é uma plataforma e portal de cinema concebido para a publica�
 * **Fichas de Filmes Completas:** Detalhes de elenco, país de produção, trailers oficiais, géneros e críticas associadas.
 
 ### 🎁 Passatempos & Antestreias
+![Participação em Passatempos](screenshot_contests.png)
+
 * **Formulários de Participação:** Utilizadores podem habilitar-se a ganhar convites duplos selecionando o local de exibição (ex: cinemas de Lisboa ou Porto).
 * **Gestão de Vencedores:** Painel administrativo completo para visualizar participações, exportar listas de participantes e sortear/definir vencedores de forma organizada.
 
@@ -43,6 +45,8 @@ O **Antestreias** é uma plataforma e portal de cinema concebido para a publica�
 * **PHP 8.2 (PDO):** Conexão rápida, segura e preparada contra injeções SQL.
 * **PHPMailer (SMTP/SSL):** Envio fiável de e-mails transacionais (como recuperação de palavra-passe e confirmação de participação).
 * **Painel Administrativo:** Backoffice completo para controlo de definições, aparência de e-mails, anúncios (Ads), estatísticas de visitas e logs de atividade.
+
+![Painel de Administração - Lista de Filmes](screenshot_admin.png)
 
 ---
 
