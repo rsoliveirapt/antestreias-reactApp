@@ -2,25 +2,24 @@
 
 ![Antestreias Banner](banner.png)
 
-O **Antestreias** é uma plataforma e portal de cinema premium concebido para a publicação de antestreias, gestão de passatempos (giveaways), agregação de notícias do mundo cinematográfico, e partilha de críticas e trailers. A plataforma oferece uma experiência altamente interativa para cinéfilos, combinando um design moderno e responsivo com um backoffice administrativo poderoso.
+O **Antestreias** é uma plataforma e portal de cinema concebido para a publicação de antestreias, gestão de passatempos, agregação de notícias do mundo cinematográfico, e partilha de críticas e trailers. A plataforma oferece uma experiência altamente interativa para cinéfilos, combinando um design moderno e responsivo com um backoffice administrativo poderoso.
 
 ---
 
 ## ✨ Funcionalidades em Destaque
 
 ### 🎬 Experiência Cinematográfica Premium
-* **Design Dark Mode Imersivo:** Layout moderno, focado na estética dos cinemas, com transições suaves, efeitos de vidro (glassmorphism) e design responsivo adaptado a dispositivos móveis.
+* **Design Imersivo:** Layout moderno com tema Dark e Light, focado na estética dos cinemas, com transições suaves, e design responsivo adaptado a dispositivos móveis.
 * **Sliders Dinâmicos:** Carrosséis interativos que destacam os últimos lançamentos, trailers e notícias em destaque na página inicial.
 * **Fichas de Filmes Completas:** Detalhes de elenco, país de produção, trailers oficiais, géneros e críticas associadas.
 
 ### 🎁 Passatempos & Antestreias
-* **Formulários de Participação:** Utilizadores podem habilitar-se a ganhar convites duplos respondendo a perguntas criativas e selecionando o local de exibição (ex: cinemas de Lisboa ou Porto).
+* **Formulários de Participação:** Utilizadores podem habilitar-se a ganhar convites duplos selecionando o local de exibição (ex: cinemas de Lisboa ou Porto).
 * **Gestão de Vencedores:** Painel administrativo completo para visualizar participações, exportar listas de participantes e sortear/definir vencedores de forma organizada.
 
-### 💬 Comunidade & Críticas
+### 💬 Comunidade
 * **Perfis de Utilizador:** Cada membro tem um perfil personalizado onde pode visualizar o seu histórico, seguir outros utilizadores e gerir as suas avaliações.
-* **Sistema de Avaliação por Estrelas:** Críticas detalhadas de filmes e séries, com notas de 1 a 5 estrelas e comentários.
-* **Fila de Moderação:** Sistema de denúncia e moderação de comentários para manter a comunidade saudável e livre de spam.
+* **Sistema de Avaliação por Estrelas:** Críticas detalhadas de filmes e séries, com notas de 1 a 10 estrelas.
 
 ### 🌐 Integração Externa & Notícias
 * **Sincronização TMDB (The Movie Database):** Importação automática de metadados, posters, elencos e detalhes de filmes diretamente da API do TMDB.
@@ -49,4 +48,4 @@ O **Antestreias** é uma plataforma e portal de cinema premium concebido para a 
 
 ## 🧑‍💻 Autor
 
-Desenvolvido com dedicação por [rsoliveirapt](https://github.com/rsoliveirapt). Se gostou deste projeto, sinta-se à vontade para deixar uma ⭐ no repositório!
+Desenvolvido com dedicação por [rsoliveirapt](https://github.com/rsoliveirapt).
