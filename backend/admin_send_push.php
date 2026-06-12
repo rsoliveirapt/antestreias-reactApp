@@ -33,9 +33,9 @@ if (empty($body)) {
     exit;
 }
 
-// VAPID keys generated previously
-define('VAPID_PUBLIC_KEY', 'BPtpDmLkHk8xqr26ilJuLU9tPCJ9skL0izYIuhuhi1jX6N8DrrUd9J1VG2knykhIK61sVTpimGKx_AUDUgcnrY8');
-define('VAPID_PRIVATE_KEY', 'JNVPLxxpbtoCZ1LNPv2S1BwjY3a2gDUkfpQ-iUiIC2A');
+// VAPID keys loaded from environment variables (.env)
+define('VAPID_PUBLIC_KEY', getenv('VAPID_PUBLIC_KEY') ?: 'BPtpDmLkHk8xqr26ilJuLU9tPCJ9skL0izYIuhuhi1jX6N8DrrUd9J1VG2knykhIK61sVTpimGKx_AUDUgcnrY8');
+define('VAPID_PRIVATE_KEY', getenv('VAPID_PRIVATE_KEY') ?: '');
 
 try {
     // Fetch all subscriptions
